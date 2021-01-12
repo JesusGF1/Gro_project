@@ -3,30 +3,31 @@ include gro
 set("dt", 0.1);
 
 
-ah1:= signal ( 2, 1 ); 
-ah2:= signal (1 , 2); 
+ah1:= signal ( 2, 1 ); //This signal is emitted by the predator, it could be interpreted as a toxin that can kill both predator and prey cells.
+ah2:= signal (1 , 2);  //This signal is emitted by the prey, it could be interpreted as an agent that is needed in the predator to produce the antitoxin 
 
+//With these two signals we can already see how the system is supposed to work, predator kills the prey but dies without it. Many parameters are gonna affect this relationship.
 
 program predator () := {
 	
 	t :=  0;
-	rfp := 100000; //gfp := volume * 100;
+	rfp := 100000; //rfp := volume * 100; //Coloring the predator cells red to be able to distinguish them
 	true : { emit_signal (ah1, 10)}
 	true : {get_signal(ah2)}
-	get_signal(ah2) < 5  & t > 37 :{
+	get_signal(ah2) < 5  & t > 37 :{ 
 		die()
-	}
+	}// a parameter time is set to not have these cells die right after they are born. We can also see that if the concentration of signal ah2 is not high enough these cells die.
 	 true : { t := t + dt }
 };
 	
 program prey () := {
 	t :=  0;
-	gfp := 100000;
+	gfp := 100000; //coloring prey cells green
 	true : {emit_signal (ah2,5)}
 	true : {get_signal(ah1)}
 	get_signal(ah1) > 3 & t > 1 :{
 		die()
-	}
+	} //if these cells surpass a threshold of signal ah1 then they die. 
 	 true : { t := t + dt }
 };
 
