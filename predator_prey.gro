@@ -21,6 +21,7 @@ program predator () := {
 	true : { emit_signal (ah1, 10)}
 	true : {get_signal(ah2)}
 	get_signal(ah2) < 10  & i > 37 :{ 
+		z := z - 1; //to account for the dead cells
 		die()
 		//z := z - 1
 	}// a parameter time is set to not have these cells die right after they are born. We can also see that if the concentration of signal ah2 is not high enough these cells die.
@@ -39,6 +40,7 @@ program preyed () := {
 	true : {emit_signal (ah2,5)}
 	true : {get_signal(ah1)}
 	get_signal(ah1) > 3 & i > 1 :{
+		x := x - 1;
 		die()
 		//x := x - 1;
 	} //if these cells surpass a threshold of signal ah1 then they die. 
