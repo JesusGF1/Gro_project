@@ -14,7 +14,7 @@ program predator () := {
 	//p := { n := }
 	rfp := 100;
 	daughter : {
-    z:= z + 1
+    z := z + 1
   	}	
 
 	true : { rfp := volume * 100} //Coloring the predator cells red to be able to distinguish them
@@ -22,6 +22,7 @@ program predator () := {
 	true : {get_signal(ah2)}
 	get_signal(ah2) < 10  & i > 37 :{ 
 		die()
+		//z := z - 1
 	}// a parameter time is set to not have these cells die right after they are born. We can also see that if the concentration of signal ah2 is not high enough these cells die.
 	 true : { i := i + dt }
 };
@@ -32,26 +33,28 @@ program preyed () := {
 	i :=  0;
 	gfp := 100;
 	daughter : {
-    x:= x + 1
+    x := x + 1
   	}
 	true : { gfp := volume * 100}
 	true : {emit_signal (ah2,5)}
 	true : {get_signal(ah1)}
 	get_signal(ah1) > 3 & i > 1 :{
 		die()
+		//x := x - 1;
 	} //if these cells surpass a threshold of signal ah1 then they die. 
 	 true : { i := i + dt }
 };
 
 program main() := {
   t := 0;
-
+  l := 0;
   true : { t := t + dt };
-
-  t > 25 : {
-    t := 0,
-    print (z, ", ", "predator");
-    print (x, ", ", "prey");
+  true : { l := l + dt };
+  
+  t > 10 : {
+    print (l, ", ", z , ", ", "predator");
+    print (l, ", ", x , ", ", "prey");
+    t := 0;
   };
 
 };
