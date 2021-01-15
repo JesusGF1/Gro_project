@@ -1,26 +1,26 @@
 include gro
 //chemostat ( true );
-set("dt", 0.1);
+set("dt", 0.05);
 
 
-ah1:= signal ( 2, 1 ); //This signal is emitted by the predator, it could be interpreted as a toxin that can kill both predator and prey cells.
-ah2:= signal (1 , 2);  //This signal is emitted by the prey, it could be interpreted as an agent that is needed in the predator to produce the antitoxin 
+ah1:= signal ( 4, 1 ); //This signal is emitted by the predator, it could be interpreted as a toxin that can kill both predator and prey cells.
+ah2:= signal (4 , 1);  //This signal is emitted by the prey, it could be interpreted as an agent that is needed in the predator to produce the antitoxin 
 
 //With these two signals we can already see how the system is supposed to work, predator kills the prey but dies without it. Many parameters are gonna affect this relationship.
 
 z := 1; //contador para pred
 program predator () := {
 	i :=  0; //time different from p.t para que no haya errores
-	//p := { n := }
+	set ( "ecoli_division_size_mean", 4.5); //parameter set to alter the division rate of the predator cells
 	rfp := 100;
 	daughter : {
     z := z + 1
   	}	
 
 	true : { rfp := volume * 100} //Coloring the predator cells red to be able to distinguish them
-	true : { emit_signal (ah1, 10)}
+	true : { emit_signal (ah1, 5)}
 	true : {get_signal(ah2)}
-	get_signal(ah2) < 10  & i > 37 :{ 
+	get_signal(ah2) < 5  & i > 35 :{ 
 		z := z - 1; //to account for the dead cells
 		die()
 		//z := z - 1
@@ -65,4 +65,4 @@ program main() := {
 
 
 ecoli ( [ x:= 0, y:= 0 ], program predator() );
-ecoli ( [ x:= 10, y:= 0 ], program preyed() );
+ecoli ( [ x:= 5, y:= 0 ], program preyed() );

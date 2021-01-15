@@ -8,39 +8,70 @@ ah2:= signal (1 , 2);  //This signal is emitted by the prey, it could be interpr
 
 //With these two signals we can already see how the system is supposed to work, predator kills the prey but dies without it. Many parameters are gonna affect this relationship.
 
+
+z := 1;
 program predator () := {
-	
 	t :=  0;
 	rfp := 100000; //rfp := volume * 100; //Coloring the predator cells red to be able to distinguish them
 	true : { emit_signal (ah1, 10)}
 	true : {get_signal(ah2)}
+	daughter : {
+    z := z + 1
+  	}	
 	get_signal(ah2) < 5  & t > 37 :{ 
+		z := z - 1;
 		die()
 	}// a parameter time is set to not have these cells die right after they are born. We can also see that if the concentration of signal ah2 is not high enough these cells die.
 	 true : { t := t + dt }
 };
 
+m := 1;
 program middleorg () := {
 	
 	t := 0;
 	true : { emit_signal (ah2, 10)}
 	true : {get_signal(ah2)}
+	daughter : {
+    m := m + 1
+  	}	
 	get_signal(ah2) < 5  & t > 37 | get_signal(ah1) >3 :{ 
+		m := m - 1;
 		die()
 	}// mixture of predator and prey
 	 true : { t := t + dt }
 };
-	
+
+x := 1;	
 program prey () := {
 	t :=  0;
 	gfp := 100000; //coloring prey cells green
+	daughter : {
+    x := x + 1
+  	}
 	true : {emit_signal (ah2,5)}
 	true : {get_signal(ah1)}
 	get_signal(ah1) > 3 & t > 1 :{
+		x := x - 1;
 		die()
 	} //if these cells surpass a threshold of signal ah1 then they die. 
 	 true : { t := t + dt }
 };
+
+program main() := {
+  t := 0;
+  l := 0;
+  true : { t := t + dt };
+  true : { l := l + dt };
+  
+  t > 10 : {
+    print (l, ",", z , ",", "predator");
+    print (l, ",", m , ",", "middleorg");
+    print (l, ",", x , ",", "prey");
+    t := 0;
+  };
+
+};
+
 
 ecoli ( [ x:= 0, y:= 0 ], program predator() );
 ecoli ( [ x:= 10, y:= 0 ], program prey() );
