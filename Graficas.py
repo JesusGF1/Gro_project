@@ -36,3 +36,7 @@ sb.scatterplot(data = data4_5, x="Time", y="Cell_number", hue="cell_type")
 data35 = pd.read_csv("Data_division_4_2_35.csv", header= None)
 data35.columns = column_name
 sb.scatterplot(data = data35, x="Time", y="Cell_number", hue="cell_type")
+
+datafood = pd.read_csv("Data_foodchain.csv", header= None)
+datafood.columns = column_name
+sb.scatterplot(data = datafood, x="Time", y="Cell_number", hue="cell_type")
